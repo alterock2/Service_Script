@@ -40,10 +40,10 @@ inst_out = ['Списано инстр'] #350
 
 #подсчет суммы помесячно
 
-vitya = df_service.index[(df_service.Механик != 'Витя')].tolist()
-df_service_vitya = df_service.drop(index =vitya)
+#vitya = df_service.index[(df_service.Механик != 'Витя')].tolist()
+#df_service_vitya = df_service.drop(index =vitya)
 
-df_service_vitya.reset_index(drop=True, inplace=True)
+#df_service_vitya.reset_index(drop=True, inplace=True)
 
 for i in df_service['Id']:
     item_index = df_service[df_service['Id'] == i].index[0]
@@ -90,7 +90,7 @@ df_finished_final = pd.concat([df_finished, df_service_finished])
 last_date = df_service['Дата'].iloc[-1]
 last_date = last_date - DateOffset(months=2)
 last_date = last_date.to_period("M")
-print(last_date)
+
 
 delete_index = df_service.index[(df_service.Месяц < last_date) & (df_service.Статус == 'Выдан')].tolist()
 if delete_index:
@@ -104,9 +104,10 @@ if delete_index:
 
 #Вывод суммы по месяцам
 
-monthly_sum_vitya = df_service_vitya.groupby(df_service_vitya['Месяц'])['Цена'].sum()
-monthly_sum_len_vitya = len(monthly_sum_vitya)
-monthly_sum = df_service.groupby(df_service['Месяц'])['Цена']. sum()
-monthly_sum_len = len(monthly_sum)
-print(f' Заработок Вити за предыдущий месяц {monthly_sum_vitya[monthly_sum_len_vitya-2]}')
-print(f' Стоимость ремонтов всего за предыдущий месяц {monthly_sum[monthly_sum_len-2]}')
+monthly_sum = df_service.groupby(df_service['Месяц'])['Цена'].sum()
+
+vitya = df_service.groupby(['Механик', 'Месяц'], as_index=False)['Цена'].sum()
+
+print(f' Заработок Вити за предыдущий месяц {vitya["Цена"].iloc[-2]}')
+
+print(f' Стоимость ремонтов всего за предыдущий месяц {monthly_sum.iloc[-2]}')
