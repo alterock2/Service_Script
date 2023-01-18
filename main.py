@@ -2,13 +2,24 @@ import pandas as pd
 from pandas. tseries.offsets import DateOffset
 from datetime import datetime, timedelta
 from styleframe import StyleFrame, Styler, utils
+import pygsheets
+pd.options.mode.chained_assignment = None
+
+from pygsheets import DataRange
+
+#Гугл таблицы
+
+gc = pygsheets.authorize(service_file=r"C:\Users\user\Desktop\stable-woods-374912-6149e61555af.json")
+sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/1uDJRJRoowdeSLKFlxa32a8fgiPYyMuq1hLSR6gu1gQo/edit?usp=sharing')
+wks = sh[0]
 #чтение файлов
 
 df_service = pd.read_excel(r"C:\Users\user\Desktop\Сервис.xlsx")
 
 df_finished = pd.read_excel(r"C:\Users\user\Desktop\Завершенные.xlsx")
 
-df_vitya = pd.read_excel(r"C:\Users\user\Desktop\Google_Disk\Сервис_Витя.xlsx")
+df_vitya = wks.get_as_df()
+#df_vitya = pd.read_excel(r"C:\Users\user\Desktop\Google_Disk\Сервис_Витя.xlsx")
 
 # преобразование в дату
 
@@ -31,6 +42,8 @@ df_service['В ремонте'] = (d - df_service['Дата']).dt.days
 #df_vitya['Id'] = df_vitya['Id'].astype(int)
 #df_service.set_index('Id')
 
+df_vitya.drop(['Дата', 'Телефон клиента', 'ФИО Клиента', 'Серийный номер', 'Статус'], axis= 1 , inplace= True )
+
 df_service.set_index('Id')
 df_service.update(df_vitya.set_index('Id', inplace=True))
 df_service.reset_index()
@@ -42,7 +55,7 @@ df_service.reset_index()
 byt_tekh_1 = ['Аэрогриль', 'Мультиварка', 'Хлебопечь'] #570
 byt_tekh_2 = ['Блендер', 'Миксер', 'Чоппер', 'Йогуртница', 'Шашлычница', 'Сэндвичница'
               'Кофеварка', 'Электрочайник', 'Термокружка', 'Кофемолка', 'Сушилка'
-              'плитка'] #370
+              'плитка', 'Тостер'] #370
 byt_tekh_3 = ['Бритва', 'Машинка для стрижки']  #340
 byt_tekh_4 = ['Вентилятор', 'Тепловентилятор', 'Фен', 'Утюг', 'Пылесос', 'Отпариватель'] #360
 byt_tekh_5 = ['Весы', 'Безмен'] #250
@@ -55,6 +68,7 @@ inst_2 = [' Фен техн', 'Зарядное', 'Гравер'] #400
 inst_3 = ['Газонокосилка', 'Электропила', 'Высоторез электро', 'Воздуходув электро',
           'Садовые ножницы']#600
 inst_4 = ['Бензопила', ' Воздуходув бензо', 'Бензотриммер'] #720
+inst_5 = ['Насос'] #470
 inst_out = ['Списано инстр'] #350
 
 #подсчет суммы помесячно
@@ -91,6 +105,8 @@ for i in df_service['Id']:
         df_service.at[item_index, 'Цена'] = 600
     elif item in inst_4:
         df_service.at[item_index, 'Цена'] = 720
+    elif item in inst_5:
+        df_service.at[item_index, 'Цена'] = 470
     elif item in inst_out:
         df_service.at[item_index, 'Цена'] = 350
 
@@ -133,6 +149,12 @@ repair_status = ['Принят', 'Получено', 'Заказано', 'Диа
 
 df_vitya = df_service[(df_service.Механик == 'Витя') & (df_service.Статус.isin(repair_status))]
 df_vitya.reset_index(drop=True, inplace=True)
+
+df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('''Ждем диагностику
+почему так долго?!''')
+
+df_vitya.drop(['Механик', 'Месяц'], axis= 1 , inplace= True )
+
 print(df_service)
 print(df_vitya)
 
@@ -140,47 +162,70 @@ print(df_vitya)
 
 #запись в xlsx
 
-df_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", index=False)
+#df_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", index=False)
 df_finished_final.to_excel(r"C:\Users\user\Desktop\Завершенные.xlsx", index=False)
+
+
 
 #Вывод суммы по месяцам
 
 monthly_sum = df_service.groupby(df_service['Месяц'])['Цена'].sum()
 
 vitya = df_service.groupby(['Механик', 'Месяц'], as_index=False)['Цена'].sum()
+vitya = vitya[(vitya.Механик == 'Витя')]
 
 print(f' Заработок Вити за предыдущий месяц {vitya["Цена"].iloc[-2]}')
 
 print(f' Стоимость ремонтов всего за предыдущий месяц {monthly_sum.iloc[-2]}')
 
-#сохранение сервис Витя в style frame
+#сохранение сервис в style frame
 
-default_style = Styler(font=utils.fonts.calibri, font_size=11, protection=True)
-sf_vitya = StyleFrame(df_vitya, styler_obj=default_style)
+default_style = Styler(font=utils.fonts.calibri, font_size=11)
+sf_service = StyleFrame(df_service, styler_obj=default_style)
 
-header_style = Styler(bold=True, font_size=12, protection=True)
-sf_vitya.apply_headers_style(styler_obj=header_style)
+header_style = Styler(bold=True, font_size=12)
+sf_service.apply_headers_style(styler_obj=header_style)
 
-green_style = Styler(bold=True, bg_color=utils.colors.green, protection=True)
-sf_vitya.apply_style_by_indexes(indexes_to_style=sf_vitya[sf_vitya['В ремонте'] <= 10],
+green_style = Styler(bold=True, bg_color=utils.colors.green)
+sf_service.apply_style_by_indexes(indexes_to_style=sf_service[sf_service['В ремонте'] <= 10],
 cols_to_style='В ремонте', styler_obj=green_style, overwrite_default_style=False)
 
-yellow_style = Styler(bold=True, bg_color=utils.colors.yellow, protection=True)
-sf_vitya.apply_style_by_indexes(indexes_to_style=sf_vitya[(sf_vitya['В ремонте'] <= 30) & (sf_vitya['В ремонте'] > 10)],
+yellow_style = Styler(bold=True, bg_color=utils.colors.yellow)
+sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['В ремонте'] <= 30) & (sf_service['В ремонте'] > 10)],
 cols_to_style='В ремонте', styler_obj=yellow_style, overwrite_default_style=False)
 
-red_style = Styler(bold=True, bg_color=utils.colors.red, protection=True)
-sf_vitya.apply_style_by_indexes(indexes_to_style=sf_vitya[(sf_vitya['В ремонте'] > 30)],
+red_style = Styler(bold=True, bg_color=utils.colors.red)
+sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['В ремонте'] > 30)],
 cols_to_style='В ремонте', styler_obj=red_style, overwrite_default_style=False)
 
-protection_style = Styler(bold=True, font=utils.fonts.calibri, font_size=11, protection=False)
-sf_vitya.apply_column_style(cols_to_style=['Запчасть'], styler_obj=protection_style, overwrite_default_style=True)
+#protection_style = Styler(bold=True, font=utils.fonts.calibri, font_size=11, protection=False)
+#sf_vitya.apply_column_style(cols_to_style=['Запчасть'], styler_obj=protection_style, overwrite_default_style=True)
 
-sf_vitya.set_column_width_dict(col_width_dict={'Id': 8,
+sf_service.set_column_width_dict(col_width_dict={'Id': 8,
 'Дата': 10,
 ('Телефон клиента', 'ФИО Клиента', 'Товар', 'Артикул', 'Серийный номер', 'Механик', 'Поломка', 'Запчасть', 'В ремонте'): 15,
-                                               ('Статус', 'Цена', 'Месяц'): 12})
+ ('Статус', 'Цена', 'Месяц'): 12})
 
 
-sf_vitya.to_excel(r"C:\Users\user\Desktop\Google_Disk\Сервис_Витя.xlsx",
-                  row_to_add_filters=0, columns_and_rows_to_freeze='A2', allow_protection=True).save()
+sf_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", row_to_add_filters=0, columns_and_rows_to_freeze='A2').save()
+
+#запись в Гугл таблицы
+
+wks.set_dataframe(df_vitya, (1, 1))
+
+#Форматирование Гугл Таблицы Витя
+
+wks.add_conditional_formatting('L', 'L', 'NUMBER_GREATER_THAN_EQ', {'backgroundColor': {'red': 0.8},
+                                'textFormat': {'bold': True}}, ['30'])
+
+wks.add_conditional_formatting('L', 'L', 'NUMBER_BETWEEN', {'backgroundColor':
+{"red": 250/255, "green": 77/255, "blue": 77/255, "alpha": 1}}, ['14', '30'])
+
+wks.add_conditional_formatting('L', 'L', 'NUMBER_LESS_THAN_EQ', {'backgroundColor':
+{"red": 255/255, "green": 158/255, "blue": 158/255, "alpha": 1}}, ['14'])
+
+model_cell = wks.cell('A1')
+model_cell.set_text_format('bold', True)
+model_cell.text_format['fontSize'] = 11
+model_cell.color = (255/255, 132/255, 0, 1)
+DataRange('A1','L1', worksheet=wks).apply_format(model_cell)
