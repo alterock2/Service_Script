@@ -159,14 +159,13 @@ repair_status = ['Принят', 'Получено', 'Заказано', 'Диа
 
 df_vitya = df_service[(df_service.Механик == 'Витя') & (df_service.Статус.isin(repair_status))]
 df_vitya.reset_index(inplace=True, drop=True)
-print(df_vitya)
 
-df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('Ждем диагностику')
+df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('-')
 
 df_vitya.drop(['Механик', 'Месяц'], axis=1, inplace=True)
 
-print(df_service)
-print(df_vitya)
+
+print(df_vitya['Дата'])
 
 
 
@@ -222,10 +221,32 @@ sf_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", row_to_add_filte
 #запись в Гугл таблицы
 
 
-#df_vitya.set_index('Id', inplace=True)
 wks.set_dataframe(df_vitya, (1, 1), copy_index=False)
 
 #Форматирование Гугл Таблицы Витя
+
+model_cell = wks.cell('A1')
+model_cell.set_text_format('bold', True)
+model_cell.text_format['fontSize'] = 11
+model_cell.color = (255/255, 132/255, 0, 1)
+model_cell.wrap_strategy = 'WRAP'
+model_cell.borders = {
+    "bottom": {'style': 'SOLID_THICK', "width": 1,"color": {'red': 0, 'green': 0, 'blue': 0}},
+    "right": {'style': 'SOLID_THICK', "width": 1,"color": {'red': 0, 'green': 0, 'blue': 0}}
+}
+
+
+
+wrap_cell = wks.cell('A1')
+wrap_cell.wrap_strategy = 'WRAP'
+
+date_cell = wks.cell('A1')
+date_cell.set_number_format(format_type= pygsheets.FormatType.DATE)
+
+DataRange('C', 'L', worksheet=wks).apply_format(wrap_cell)
+DataRange('A1','L1', worksheet=wks).apply_format(model_cell)
+
+
 
 wks.add_conditional_formatting('L', 'L', 'NUMBER_GREATER_THAN_EQ', {'backgroundColor': {'red': 0.8},
                                 'textFormat': {'bold': True}}, ['30'])
@@ -236,9 +257,5 @@ wks.add_conditional_formatting('L', 'L', 'NUMBER_BETWEEN', {'backgroundColor':
 wks.add_conditional_formatting('L', 'L', 'NUMBER_LESS_THAN_EQ', {'backgroundColor':
 {"red": 255/255, "green": 158/255, "blue": 158/255, "alpha": 1}}, ['14'])
 
-model_cell = wks.cell('A1')
-model_cell.set_text_format('bold', True)
-model_cell.text_format['fontSize'] = 11
-model_cell.color = (255/255, 132/255, 0, 1)
-model_cell.wrap_strategy = 'WRAP'
-DataRange('A1','L1', worksheet=wks).apply_format(model_cell)
+DataRange('B2','B8', worksheet=wks).apply_format(date_cell)
+
