@@ -10,8 +10,8 @@ from pygsheets import DataRange
 #Гугл таблицы
 
 gc = pygsheets.authorize(service_file=r"C:\Users\user\Desktop\stable-woods-374912-6149e61555af.json")
-sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/1uDJRJRoowdeSLKFlxa32a8fgiPYyMuq1hLSR6gu1gQo/edit?usp=sharing')
-wks = sh[0]
+sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/14clInBRzbD8RzxUqg7aXv-u2eeQw_DrLHaoEn2J8GHc/edit#gid=369156545')
+wks = sh[2]
 #чтение файлов
 
 df_service = pd.read_excel(r"C:\Users\user\Desktop\Сервис.xlsx")
@@ -19,7 +19,10 @@ df_service = pd.read_excel(r"C:\Users\user\Desktop\Сервис.xlsx")
 df_finished = pd.read_excel(r"C:\Users\user\Desktop\Завершенные.xlsx")
 
 df_vitya = wks.get_as_df()
+
 #df_vitya = pd.read_excel(r"C:\Users\user\Desktop\Google_Disk\Сервис_Витя.xlsx")
+
+
 
 # преобразование в дату
 
@@ -36,17 +39,24 @@ d = datetime.today()
 
 df_service['В ремонте'] = (d - df_service['Дата']).dt.days
 
-
+print(df_vitya['Запчасть'])
 # обновление основного файла из Вити
-#df_service['Id'] = df_service['Id'].astype(int)
-#df_vitya['Id'] = df_vitya['Id'].astype(int)
-#df_service.set_index('Id')
+df_service['Id'] = df_service['Id'].astype(int)
+df_vitya['Id'] = df_vitya['Id'].astype(int)
 
-df_vitya.drop(['Дата', 'Телефон клиента', 'ФИО Клиента', 'Серийный номер', 'Статус'], axis= 1 , inplace= True )
+df_vitya = df_vitya[['Id', 'Запчасть']]
 
-df_service.set_index('Id')
-df_service.update(df_vitya.set_index('Id', inplace=True))
-df_service.reset_index()
+df_service.set_index('Id', inplace=True)
+df_vitya.set_index('Id', inplace=True)
+#.drop(['Дата', 'Телефон клиента', 'ФИО Клиента', 'Серийный номер', 'Статус', 'Товар', 'В ремонте'], axis= 1 , inplace= True )
+
+
+df_service.update(df_vitya)
+df_service.reset_index(inplace=True)
+df_vitya.reset_index(inplace=True)
+
+print(df_service['Запчасть'])
+
 #df_service.update(df_vitya)
 
 
@@ -128,7 +138,7 @@ finished = df_service[(df_service.Статус == 'Выдан') & (df_service.М
 #df_service_finished = df_service.drop(index=finished)
 #df_finished.reset_index(drop=True, inplace=True)
 df_finished_final = pd.concat([df_finished, finished])
-df_finished_final.reset_index()
+df_finished_final.reset_index(inplace=True, drop=True)
 
 #удаление старых данных выдан
 
@@ -136,7 +146,7 @@ delete_index = df_service.index[(df_service.Месяц < last_date) & (df_servic
 
 if delete_index:
     df_service = df_service.drop(index=delete_index)
-    df_service.reset_index() #drop=True, inplace=True
+    df_service.reset_index(inplace=True) #drop=True, inplace=True
 
 
 #удаление 00:00
@@ -148,12 +158,12 @@ df_service['Дата'] = df_service['Дата'].dt.date
 repair_status = ['Принят', 'Получено', 'Заказано', 'Диагностика']
 
 df_vitya = df_service[(df_service.Механик == 'Витя') & (df_service.Статус.isin(repair_status))]
-df_vitya.reset_index(drop=True, inplace=True)
+df_vitya.reset_index(inplace=True, drop=True)
+print(df_vitya)
 
-df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('''Ждем диагностику
-почему так долго?!''')
+df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('Ждем диагностику')
 
-df_vitya.drop(['Механик', 'Месяц'], axis= 1 , inplace= True )
+df_vitya.drop(['Механик', 'Месяц'], axis=1, inplace=True)
 
 print(df_service)
 print(df_vitya)
@@ -211,7 +221,9 @@ sf_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", row_to_add_filte
 
 #запись в Гугл таблицы
 
-wks.set_dataframe(df_vitya, (1, 1))
+
+#df_vitya.set_index('Id', inplace=True)
+wks.set_dataframe(df_vitya, (1, 1), copy_index=False)
 
 #Форматирование Гугл Таблицы Витя
 
@@ -228,4 +240,5 @@ model_cell = wks.cell('A1')
 model_cell.set_text_format('bold', True)
 model_cell.text_format['fontSize'] = 11
 model_cell.color = (255/255, 132/255, 0, 1)
+model_cell.wrap_strategy = 'WRAP'
 DataRange('A1','L1', worksheet=wks).apply_format(model_cell)
