@@ -174,8 +174,8 @@ finished = df_service[(df_service.Статус == 'Выдан') & (df_service.М
 #finished = df_service.index[(df_service.Статус != 'Выдан')].tolist()
 #df_service_finished = df_service.drop(index=finished)
 #df_finished.reset_index(drop=True, inplace=True)
-df_finished_final = pd.concat([df_finished, finished])
-df_finished_final.reset_index(inplace=True, drop=True)
+df_finished_final = pd.concat([df_finished, finished], ignore_index=True)
+#df_finished_final.reset_index(inplace=True, drop=True)
 
 #удаление старых данных выдан
 
