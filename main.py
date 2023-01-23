@@ -10,8 +10,8 @@ from pygsheets import DataRange
 #Гугл таблицы
 
 gc = pygsheets.authorize(service_file=r"C:\Users\user\Desktop\stable-woods-374912-6149e61555af.json")
-sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/14clInBRzbD8RzxUqg7aXv-u2eeQw_DrLHaoEn2J8GHc/edit#gid=369156545')
-wks = sh[2]
+sh = gc.open_by_url('https://docs.google.com/spreadsheets/d/1uDJRJRoowdeSLKFlxa32a8fgiPYyMuq1hLSR6gu1gQo/edit#gid=0')
+wks = sh[0]
 #чтение файлов
 
 df_service = pd.read_excel(r"C:\Users\user\Desktop\Сервис.xlsx")
@@ -65,7 +65,7 @@ print(df_service['Запчасть'])
 byt_tekh_1 = ['Аэрогриль', 'Мультиварка', 'Хлебопечь'] #570
 byt_tekh_2 = ['Блендер', 'Миксер', 'Чоппер', 'Йогуртница', 'Шашлычница', 'Сэндвичница'
               'Кофеварка', 'Электрочайник', 'Термокружка', 'Кофемолка', 'Сушилка'
-              'плитка', 'Тостер'] #370
+              'Плитка', 'Тостер', 'Плита', 'Электроплитка'] #370
 byt_tekh_3 = ['Бритва', 'Машинка для стрижки']  #340
 byt_tekh_4 = ['Вентилятор', 'Тепловентилятор', 'Фен', 'Утюг', 'Пылесос', 'Отпариватель'] #360
 byt_tekh_5 = ['Весы', 'Безмен'] #250
@@ -91,34 +91,71 @@ inst_out = ['Списано инстр'] #350
 for i in df_service['Id']:
     item_index = df_service[df_service['Id'] == i].index[0]
     item = df_service.at[item_index, 'Товар']
+    item_status = df_service.at[item_index, 'Статус']
     if item in byt_tekh_1:
-        df_service.at[item_index, 'Цена'] = 570
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 570
+        else:
+            df_service.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_2:
-        df_service.at[item_index, 'Цена'] = 370
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 370
+        else:
+            df_service.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_3:
-        df_service.at[item_index, 'Цена'] = 340
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 340
+        else:
+            df_service.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_4:
-        df_service.at[item_index, 'Цена'] = 360
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 360
+        else:
+            df_service.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_5:
-        df_service.at[item_index, 'Цена'] = 250
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 250
+        else:
+            df_service.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_6:
-        df_service.at[item_index, 'Цена'] = 460
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 460
+        else:
+            df_service.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_7:
-        df_service.at[item_index, 'Цена'] = 500
-    elif item in byt_tekh_out:
-        df_service.at[item_index, 'Цена'] = 200
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 500
+        else:
+            df_service.at[item_index, 'Цена'] = 200
+    #elif item in byt_tekh_out:
+    #    df_service.at[item_index, 'Цена'] = 200
     elif item in inst_1:
-        df_service.at[item_index, 'Цена'] = 500
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 500
+        else:
+            df_service.at[item_index, 'Цена'] = 350
     elif item in inst_2:
-        df_service.at[item_index, 'Цена'] = 400
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 400
+        else:
+            df_service.at[item_index, 'Цена'] = 350
     elif item in inst_3:
-        df_service.at[item_index, 'Цена'] = 600
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 600
+        else:
+            df_service.at[item_index, 'Цена'] = 350
     elif item in inst_4:
-        df_service.at[item_index, 'Цена'] = 720
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 720
+        else:
+            df_service.at[item_index, 'Цена'] = 350
     elif item in inst_5:
-        df_service.at[item_index, 'Цена'] = 470
-    elif item in inst_out:
-        df_service.at[item_index, 'Цена'] = 350
+        if item_status != 'Списано':
+            df_service.at[item_index, 'Цена'] = 470
+        else:
+            df_service.at[item_index, 'Цена'] = 350
+    #elif item in inst_out:
+    #    df_service.at[item_index, 'Цена'] = 350
 
     else:
         df_service.at[item_index, 'Цена'] = 0
@@ -142,7 +179,9 @@ df_finished_final.reset_index(inplace=True, drop=True)
 
 #удаление старых данных выдан
 
-delete_index = df_service.index[(df_service.Месяц < last_date) & (df_service.Статус == 'Выдан')].tolist()
+names_to_del = ['Выдан', 'Списано']
+
+delete_index = df_service.index[(df_service.Месяц < last_date) & (df_service.Статус.isin(names_to_del))].tolist()
 
 if delete_index:
     df_service = df_service.drop(index=delete_index)
@@ -155,7 +194,7 @@ df_service['Дата'] = df_service['Дата'].dt.date
 
 #обновление таблицы Витя
 
-repair_status = ['Принят', 'Получено', 'Заказано', 'Диагностика']
+repair_status = ['Принят', 'Получено', 'Заказано', 'Диагностика', 'Списано']
 
 df_vitya = df_service[(df_service.Механик == 'Витя') & (df_service.Статус.isin(repair_status))]
 df_vitya.reset_index(inplace=True, drop=True)
