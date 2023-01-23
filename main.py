@@ -6,6 +6,7 @@ import pygsheets
 pd.options.mode.chained_assignment = None
 
 from pygsheets import DataRange
+from Price import price_count
 
 #Гугл таблицы
 
@@ -170,16 +171,15 @@ last_date = last_date.to_period("M")
 
 
 #создание таблицы завершенные
-finished = df_service[(df_service.Статус == 'Выдан') & (df_service.Месяц < last_date)]
-#finished = df_service.index[(df_service.Статус != 'Выдан')].tolist()
-#df_service_finished = df_service.drop(index=finished)
-#df_finished.reset_index(drop=True, inplace=True)
+
+names_to_del = ['Выдан', 'Списано']
+
+finished = df_service[(df_service.Статус.isin(names_to_del)) & (df_service.Месяц < last_date)]
+finished.drop('В ремонте', axis=1, inplace=True)
 df_finished_final = pd.concat([df_finished, finished], ignore_index=True)
 #df_finished_final.reset_index(inplace=True, drop=True)
 
 #удаление старых данных выдан
-
-names_to_del = ['Выдан', 'Списано']
 
 delete_index = df_service.index[(df_service.Месяц < last_date) & (df_service.Статус.isin(names_to_del))].tolist()
 
@@ -202,11 +202,6 @@ df_vitya.reset_index(inplace=True, drop=True)
 df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('-')
 
 df_vitya.drop(['Механик', 'Месяц'], axis=1, inplace=True)
-
-
-print(df_vitya['Дата'])
-
-
 
 #запись в xlsx
 
