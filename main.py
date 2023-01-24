@@ -63,103 +63,98 @@ print(df_service['Запчасть'])
 
 #добавление списов с ценами
 
-byt_tekh_1 = ['Аэрогриль', 'Мультиварка', 'Хлебопечь'] #570
-byt_tekh_2 = ['Блендер', 'Миксер', 'Чоппер', 'Йогуртница', 'Шашлычница', 'Сэндвичница'
-              'Кофеварка', 'Электрочайник', 'Термокружка', 'Кофемолка', 'Сушилка'
-              'Плитка', 'Тостер', 'Плита', 'Электроплитка'] #370
-byt_tekh_3 = ['Бритва', 'Машинка для стрижки']  #340
-byt_tekh_4 = ['Вентилятор', 'Тепловентилятор', 'Фен', 'Утюг', 'Пылесос', 'Отпариватель'] #360
-byt_tekh_5 = ['Весы', 'Безмен'] #250
-byt_tekh_6 = ['Комбайн', 'Соковыжималка', 'Термопот'] #460
-byt_tekh_7 = ['Микроволновка', 'Мини-печь'] #500
-byt_tekh_out = ['Списано бт'] #200
-
-inst_1 = ['Аккумулятор'] #500
-inst_2 = [' Фен техн', 'Зарядное', 'Гравер'] #400
-inst_3 = ['Газонокосилка', 'Электропила', 'Высоторез электро', 'Воздуходув электро',
-          'Садовые ножницы']#600
-inst_4 = ['Бензопила', ' Воздуходув бензо', 'Бензотриммер'] #720
-inst_5 = ['Насос'] #470
-inst_out = ['Списано инстр'] #350
+# byt_tekh_1 = ['Аэрогриль', 'Мультиварка', 'Хлебопечь'] #570
+# byt_tekh_2 = ['Блендер', 'Миксер', 'Чоппер', 'Йогуртница', 'Шашлычница', 'Сэндвичница'
+#               'Кофеварка', 'Электрочайник', 'Термокружка', 'Кофемолка', 'Сушилка'
+#               'Плитка', 'Тостер', 'Плита', 'Электроплитка'] #370
+# byt_tekh_3 = ['Бритва', 'Машинка для стрижки']  #340
+# byt_tekh_4 = ['Вентилятор', 'Тепловентилятор', 'Фен', 'Утюг', 'Пылесос', 'Отпариватель'] #360
+# byt_tekh_5 = ['Весы', 'Безмен'] #250
+# byt_tekh_6 = ['Комбайн', 'Соковыжималка', 'Термопот'] #460
+# byt_tekh_7 = ['Микроволновка', 'Мини-печь'] #500
+# byt_tekh_out = ['Списано бт'] #200
+#
+# inst_1 = ['Аккумулятор'] #500
+# inst_2 = [' Фен техн', 'Зарядное', 'Гравер'] #400
+# inst_3 = ['Газонокосилка', 'Электропила', 'Высоторез электро', 'Воздуходув электро',
+#           'Садовые ножницы']#600
+# inst_4 = ['Бензопила', ' Воздуходув бензо', 'Бензотриммер'] #720
+# inst_5 = ['Насос'] #470
+# inst_out = ['Списано инстр'] #350
 
 #подсчет суммы помесячно
 
-#vitya = df_service.index[(df_service.Механик != 'Витя')].tolist()
-#df_service_vitya = df_service.drop(index =vitya)
-
-#df_service_vitya.reset_index(drop=True, inplace=True)
-
 for i in df_service['Id']:
-    item_index = df_service[df_service['Id'] == i].index[0]
-    item = df_service.at[item_index, 'Товар']
-    item_status = df_service.at[item_index, 'Статус']
-    if item in byt_tekh_1:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 570
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    elif item in byt_tekh_2:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 370
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    elif item in byt_tekh_3:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 340
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    elif item in byt_tekh_4:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 360
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    elif item in byt_tekh_5:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 250
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    elif item in byt_tekh_6:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 460
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    elif item in byt_tekh_7:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 500
-        else:
-            df_service.at[item_index, 'Цена'] = 200
-    #elif item in byt_tekh_out:
-    #    df_service.at[item_index, 'Цена'] = 200
-    elif item in inst_1:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 500
-        else:
-            df_service.at[item_index, 'Цена'] = 350
-    elif item in inst_2:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 400
-        else:
-            df_service.at[item_index, 'Цена'] = 350
-    elif item in inst_3:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 600
-        else:
-            df_service.at[item_index, 'Цена'] = 350
-    elif item in inst_4:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 720
-        else:
-            df_service.at[item_index, 'Цена'] = 350
-    elif item in inst_5:
-        if item_status != 'Списано':
-            df_service.at[item_index, 'Цена'] = 470
-        else:
-            df_service.at[item_index, 'Цена'] = 350
-    #elif item in inst_out:
-    #    df_service.at[item_index, 'Цена'] = 350
-
-    else:
-        df_service.at[item_index, 'Цена'] = 0
+    price_count(i, df=df_service)
+    # item_index = df_service[df_service['Id'] == i].index[0]
+    # item = df_service.at[item_index, 'Товар']
+    # item_status = df_service.at[item_index, 'Статус']
+    # if item in byt_tekh_1:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 570
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    # elif item in byt_tekh_2:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 370
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    # elif item in byt_tekh_3:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 340
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    # elif item in byt_tekh_4:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 360
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    # elif item in byt_tekh_5:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 250
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    # elif item in byt_tekh_6:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 460
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    # elif item in byt_tekh_7:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 500
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 200
+    #
+    #
+    # elif item in inst_1:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 500
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 350
+    # elif item in inst_2:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 400
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 350
+    # elif item in inst_3:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 600
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 350
+    # elif item in inst_4:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 720
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 350
+    # elif item in inst_5:
+    #     if item_status != 'Списано':
+    #         df_service.at[item_index, 'Цена'] = 470
+    #     else:
+    #         df_service.at[item_index, 'Цена'] = 350
+    #
+    #
+    # else:
+    #     df_service.at[item_index, 'Цена'] = 0
 
 
 
@@ -193,16 +188,16 @@ if delete_index:
 df_service['Дата'] = df_service['Дата'].dt.date
 
 #обновление таблицы Витя
-
+print(df_vitya)
 repair_status = ['Принят', 'Получено', 'Заказано', 'Диагностика', 'Списано']
 
 df_vitya = df_service[(df_service.Механик == 'Витя') & (df_service.Статус.isin(repair_status))]
 df_vitya.reset_index(inplace=True, drop=True)
-
+print(df_vitya)
 df_vitya['Запчасть'] = df_vitya['Запчасть']. fillna('-')
 
 df_vitya.drop(['Механик', 'Месяц'], axis=1, inplace=True)
-
+print(df_vitya)
 #запись в xlsx
 
 #df_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", index=False)
@@ -254,7 +249,7 @@ sf_service.to_excel(r"C:\Users\user\Desktop\Сервис.xlsx", row_to_add_filte
 
 #запись в Гугл таблицы
 
-
+wks.clear()
 wks.set_dataframe(df_vitya, (1, 1), copy_index=False)
 
 #Форматирование Гугл Таблицы Витя
