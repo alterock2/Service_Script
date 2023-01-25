@@ -16,69 +16,95 @@ def price_count(str, df):
     inst_4 = ['Бензопила', ' Воздуходув бензо', 'Бензотриммер']  # 720
     inst_5 = ['Насос']  # 470
 
+    other_price = ['Списано', 'Не гарантия']
+
     item_index = df[df['Id'] == str].index[0]
     item = df.at[item_index, 'Товар']
     item_status = df.at[item_index, 'Статус']
     if item in byt_tekh_1:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 570
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_2:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 370
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_3:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 340
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_4:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 360
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_5:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 250
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_6:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 460
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
     elif item in byt_tekh_7:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 500
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 200
 
     elif item in inst_1:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 500
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 350
     elif item in inst_2:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 400
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 350
     elif item in inst_3:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 600
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 350
     elif item in inst_4:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 720
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 350
     elif item in inst_5:
-        if item_status != 'Списано':
+        if item_status not in other_price:
             df.at[item_index, 'Цена'] = 470
-        else:
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
             df.at[item_index, 'Цена'] = 350
 
     else:
