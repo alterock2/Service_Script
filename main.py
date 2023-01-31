@@ -126,15 +126,22 @@ sf_service.apply_headers_style(styler_obj=header_style)
 green_style = Styler(bold=True, bg_color=utils.colors.green)
 sf_service.apply_style_by_indexes(indexes_to_style=sf_service[sf_service['В ремонте'] <= 10],
                                   cols_to_style='В ремонте', styler_obj=green_style, overwrite_default_style=False)
+sf_service.apply_style_by_indexes(indexes_to_style=sf_service[sf_service['Статус'] == 'Выдан'],
+                                  cols_to_style='Статус', styler_obj=green_style, overwrite_default_style=False)
 
 yellow_style = Styler(bold=True, bg_color=utils.colors.yellow)
 sf_service.apply_style_by_indexes(
     indexes_to_style=sf_service[(sf_service['В ремонте'] <= 30) & (sf_service['В ремонте'] > 10)],
     cols_to_style='В ремонте', styler_obj=yellow_style, overwrite_default_style=False)
+sf_service.apply_style_by_indexes(
+    indexes_to_style=sf_service[(sf_service['Статус'] == 'Диагностика')],
+    cols_to_style='Статус', styler_obj=yellow_style, overwrite_default_style=False)
 
 red_style = Styler(bold=True, bg_color=utils.colors.red)
 sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['В ремонте'] > 30)],
                                   cols_to_style='В ремонте', styler_obj=red_style, overwrite_default_style=False)
+sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['Статус'] == 'Списано')],
+                                  cols_to_style='Статус', styler_obj=red_style, overwrite_default_style=False)
 
 sf_service.set_column_width_dict(col_width_dict={'Id': 8,
                                                  'Дата': 10,
