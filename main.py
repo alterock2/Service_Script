@@ -35,8 +35,6 @@ d = datetime.today()
 
 df_service['В ремонте'] = (d - df_service['Дата']).dt.days
 
-print(df_vitya['Запчасть'])
-
 # обновление основного файла из Вити
 
 df_service['Id'] = df_service['Id'].astype(int)
@@ -53,8 +51,6 @@ df_service.update(df_vitya)
 df_service.reset_index(inplace=True)
 df_vitya.reset_index(inplace=True)
 
-print(df_service['Запчасть'])
-
 # подсчет суммы помесячно
 
 for i in df_service['Id']:
@@ -66,7 +62,7 @@ for i in df_service['Id']:
 last_date = df_service['Дата'].iloc[-1]
 last_date = last_date - DateOffset(months=2)
 last_date = last_date.to_period("M")
-
+print(f'last date{last_date}')
 # создание таблицы завершенные
 
 names_to_del = ['Выдан', 'Списано', 'Не гарантия']
@@ -114,6 +110,8 @@ vitya = vitya[(vitya.Механик == 'Витя')]
 print(f' Заработок Вити за предыдущий месяц {vitya["Цена"].iloc[-2]}')
 
 print(f' Стоимость ремонтов всего за предыдущий месяц {monthly_sum.iloc[-2]}')
+
+print(vitya[['Цена', 'Месяц']])
 
 # сохранение сервис в style frame
 
