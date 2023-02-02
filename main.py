@@ -1,6 +1,6 @@
 import pandas as pd
 from pandas.tseries.offsets import DateOffset
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, date
 from styleframe import StyleFrame, Styler, utils
 import pygsheets
 
@@ -102,14 +102,19 @@ df_finished_final.to_excel(r"C:\Users\user\Desktop\Завершенные.xlsx",
 
 # Вывод суммы по месяцам
 
-monthly_sum = df_service.groupby(df_service['Месяц'])['Цена'].sum()
+this_day = date.today()
+this_day = this_day - DateOffset(months=1)
+this_day = this_day.to_period("M")
 
 vitya = df_service.groupby(['Механик', 'Месяц'], as_index=False)['Цена'].sum()
-vitya = vitya[(vitya.Механик == 'Витя')]
+vitya = vitya[(vitya.Механик == 'Витя') & (vitya.Месяц == this_day)]
 
-print(f' Заработок Вити за предыдущий месяц {vitya["Цена"].iloc[-2]}')
+monthly_sum = df_service.groupby(df_service['Месяц'], as_index=False)['Цена'].sum()
+monthly_sum = monthly_sum[(monthly_sum.Месяц == this_day)]
 
-print(f' Стоимость ремонтов всего за предыдущий месяц {monthly_sum.iloc[-2]}')
+print(f' Заработок Вити за предыдущий месяц {vitya["Цена"].iloc[0]}')
+
+print(f' Стоимость ремонтов всего за предыдущий месяц {monthly_sum["Цена"].iloc[0]}')
 
 print(vitya[['Цена', 'Месяц']])
 
