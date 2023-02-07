@@ -78,7 +78,8 @@ delete_index = df_service.index[(df_service.Месяц < last_date) & (df_servic
 
 if delete_index:
     df_service = df_service.drop(index=delete_index)
-    df_service.reset_index(inplace=True)  # drop=True, inplace=True
+    df_service.reset_index(inplace=True, drop=True)  # drop=True, inplace=True
+
 
 # удаление 00:00
 
@@ -145,6 +146,10 @@ sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['В р
                                   cols_to_style='В ремонте', styler_obj=red_style, overwrite_default_style=False)
 sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['Статус'] == 'Списано')],
                                   cols_to_style='Статус', styler_obj=red_style, overwrite_default_style=False)
+
+purple_style = Styler(bold=True, bg_color=utils.colors.purple)
+sf_service.apply_style_by_indexes(indexes_to_style=sf_service[(sf_service['Статус'] == 'Заказано')],
+                                  cols_to_style='Статус', styler_obj=purple_style, overwrite_default_style=False)
 
 sf_service.set_column_width_dict(col_width_dict={'Id': 8,
                                                  'Дата': 10,
