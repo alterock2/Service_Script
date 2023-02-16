@@ -14,7 +14,9 @@ def price_count(str, df):
     inst_3 = ['Газонокосилка', 'Электропила', 'Высоторез электро', 'Воздуходув электро',
               'Садовые ножницы']  # 600
     inst_4 = ['Бензопила', ' Воздуходув бензо', 'Бензотриммер']  # 720
+
     inst_5 = ['Насос', 'Электротриммер']  # 470
+    inst_6 = ['Маска сварщика', 'Дальномер']  # 300
 
     other_price = ['Списано', 'Не гарантия']
 
@@ -102,6 +104,13 @@ def price_count(str, df):
     elif item in inst_5:
         if item_status not in other_price:
             df.at[item_index, 'Цена'] = 470
+        elif item_status == 'Не гарантия':
+            df.at[item_index, 'Цена'] = 0
+        elif item_status == 'Списано':
+            df.at[item_index, 'Цена'] = 350
+    elif item in inst_6:
+        if item_status not in other_price:
+            df.at[item_index, 'Цена'] = 300
         elif item_status == 'Не гарантия':
             df.at[item_index, 'Цена'] = 0
         elif item_status == 'Списано':
