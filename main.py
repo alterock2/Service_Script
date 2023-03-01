@@ -216,6 +216,15 @@ wks.add_conditional_formatting('J', 'J', 'TEXT_EQ', {'backgroundColor':
                                                                      {"red": 107 / 255, "green": 219 / 255,
                                                                       "blue": 33 / 255, "alpha": 1}}, ['Заказано'])
 
+wks.add_conditional_formatting('J', 'J', 'TEXT_EQ', {'backgroundColor':
+                                                                     {"red": 214 / 255, "green": 53 / 255,
+                                                                      "blue": 232 / 255, "alpha": 1}}, ['Диагностика'])
+
+wks.add_conditional_formatting('J', 'J', 'TEXT_EQ', {'backgroundColor':
+                                                                     {"red": 23 / 255, "green": 136 / 255,
+                                                                      "blue": 196 / 255, "alpha": 1},
+                                                     'textFormat': {'bold': True}}, ['Не гарантия'])
+
 gc.run_batch()
 
 gc.set_batch_mode(False)
