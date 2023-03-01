@@ -167,7 +167,7 @@ wks.set_dataframe(df_vitya, (1, 1), copy_index=False)
 
 # Форматирование Гугл Таблицы Витя
 
-len_vitya = df_vitya.shape[0] + 1  #просчет длины таблицы для выделения границ
+len_vitya = df_vitya.shape[0] +1  #просчет длины таблицы для выделения границ
 len_vitya = 'L' + str(len_vitya)
 
 gc.set_batch_mode(True)
@@ -206,6 +206,15 @@ wks.add_conditional_formatting('L', 'L', 'NUMBER_BETWEEN', {'backgroundColor':
 wks.add_conditional_formatting('L', 'L', 'NUMBER_LESS_THAN_EQ', {'backgroundColor':
                                                                      {"red": 255 / 255, "green": 158 / 255,
                                                                       "blue": 158 / 255, "alpha": 1}}, ['14'])
+
+wks.add_conditional_formatting('J', 'J', 'TEXT_EQ', {'backgroundColor':
+                                                                     {"red": 246 / 255, "green": 250 / 255,
+                                                                      "blue": 0 / 255, "alpha": 1},
+                                                     'textFormat': {'bold': True}}, ['Списано'])
+
+wks.add_conditional_formatting('J', 'J', 'TEXT_EQ', {'backgroundColor':
+                                                                     {"red": 107 / 255, "green": 219 / 255,
+                                                                      "blue": 33 / 255, "alpha": 1}}, ['Заказано'])
 
 gc.run_batch()
 
